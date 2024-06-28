@@ -16,9 +16,10 @@ function getRandomElement(arr) {
 app.post('/search', async (req, res) => {
   try {
     const query = req.body['proximo-a'];
+    const km = req.body['km'] ? req.body['km'] : 2;
     const encodedQuery = encodeURIComponent(query);
 
-    const googleUrl = `https://www.google.com/search?sca_esv=562741715&rlz=1C5GCEM_enBR1054BR1054&tbs=lf:1,lf_ui:9&tbm=lcl&q=restaurantes+proximos+${encodedQuery}`;
+    const googleUrl = `https://www.google.com/search?sca_esv=562741715&rlz=1C5GCEM_enBR1054BR1054&tbs=lf:1,lf_ui:9&tbm=lcl&q=restaurantes+proximos+${encodedQuery}+no+maximo+${km}+km`;
 
     const headers = {
       'authority': 'www.google.com',
@@ -35,12 +36,13 @@ app.post('/search', async (req, res) => {
     const resultElements = [];
 
     $('[jscontroller="AtSb"]').each((index, element) => {
+
       const restaurantName = $(element).find('.OSrXXb:not(.WaZi0e):not(.gqguwf)').text();
       const rating = $(element).find('.yi40Hd.YrbPuc').text();
 
       const metaDataElement = $(element).find('div[data-lat][data-lng]');
       const metaData = metaDataElement.next().text().trim();
-      
+
       if (restaurantName !== "Restaurante") {
         resultElements.push({
           restaurante:restaurantName,
